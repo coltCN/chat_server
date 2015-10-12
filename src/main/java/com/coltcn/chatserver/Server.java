@@ -1,6 +1,7 @@
 package com.coltcn.chatserver;
 
 import com.coltcn.chatserver.handler.ChatServerHandler;
+import com.coltcn.chatserver.handler.WebSocketServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -43,12 +44,13 @@ public class Server {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline()
                                 .addLast(new HttpServerCodec())
-//                                .addLast(new HttpRequestDecoder())
                                 .addLast(new HttpObjectAggregator(64 * 1024))
-//                                .addLast(new HttpResponseEncoder())
                                 .addLast(new ChunkedWriteHandler())
+                                /**
                                 .addLast(new WebSocketServerProtocolHandler("/ws"))
                                 .addLast(new ChatServerHandler());
+                                 **/
+                                .addLast(new WebSocketServerHandler()); //自定义Websocket 处理类
                     }
                 });
         try {
