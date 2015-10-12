@@ -13,6 +13,21 @@ import java.nio.charset.Charset;
  */
 public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println(String.format("client[%s] Unregistered", ctx.channel()));
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println(String.format("client[%s] Inactive", ctx.channel()));
+    }
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println(String.format("client[%s] Registered", ctx.channel()));
+    }
+
+    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         WebSocketFrame frame = (WebSocketFrame) msg;
         ByteBuf buf = frame.content();
@@ -25,6 +40,6 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println(String.format("client[%s] connect",ctx.channel()));
+        System.out.println(String.format("client[%s] Active",ctx.channel()));
     }
 }
