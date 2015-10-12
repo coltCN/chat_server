@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>聊天室</title>
+	<style type="text/css">
+	.main{width: 900px;height: 600px;}
+	.msg_board{width: 100%;height: 90%;border: 1px solid black;margin: 20px;}
+	</style>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+	<div class="main">
+		<div class="msg_board" id="msg_board"></div>
+		<div><input type="test" id="msg_input" /> <button id="send_msg">发送</button> </div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		var socket;
+		if(!window.WebSocket){
+			window.WebSocket = window.MozWebSocket;
+		}
+		if(window.WebSocket){
+			var mBoard = $("#msg_board");
+			socket = new WebSocket("ws://127.0.0.1:9001/ws");
+			socket.onmessage= function(event){
+				mBoard.html(mBoard.html() + '<br>' +event.data);
+			}
+
+			socket.onopen = function(event){
+				mBoard.html('WebSocket Open!');
+			}
+			socket.onclose = function(event){
+				mBoard.html(mBoard.html() + '<br>WebSocket Closed!' );
+			}
+		}
+
+		$('#send_msg').click(function(){
+			if(!socket) return;
+			if(socket.readyState == WebSocket.OPEN){
+				var msg = $("#msg_input").val()
+				socket.send(msg);
+				$("#msg_input").val('');
+			}else{
+				alert("The socket is not open!");
+			}
+		})
+	})
+</script>
+</html>
